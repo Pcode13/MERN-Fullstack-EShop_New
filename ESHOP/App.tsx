@@ -1,14 +1,18 @@
-import { Text, View } from 'react-native'
-import React, { Component } from 'react'
+import React, { FC } from 'react';
+import { View, StyleSheet, Text } from 'react-native';
 
-export class App extends Component {
-  render() {
-    return (
-      <View>
-        <Text>App</Text>
-      </View>
-    )
-  }
-}
+interface Props {}
 
-export default App
+const App: FC<Props> = () => {
+  return (
+    <View style={styles.container}>
+      <Text> Hello Typescript App</Text>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {},
+});
+
+export default App;
