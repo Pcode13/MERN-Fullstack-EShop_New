@@ -6,7 +6,7 @@ interface Props {}
 const App: FC<Props> = () => {
   return (
     <View style={styles.container}>
-      <Text> Hello Typescript App</Text>
+      <Text> Hello Typescript App mnmn</Text>
     </View>
   );
 };
