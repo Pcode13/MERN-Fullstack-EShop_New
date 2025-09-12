@@ -1,25 +1,21 @@
 import React, { FC } from 'react';
-import { View, StyleSheet, Text, StatusBar } from 'react-native';
-import Header from './src/components/Header';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import ProductHome from './src/screens/Products/ProductHome';
+import { NavigationContainer } from '@react-navigation/native';
+import BottomTabNavigator from './src/navigation/BottomTabNavigator';
 
 interface Props {}
 
 const App: FC<Props> = () => {
-  return <ProductHome />;
-  //   // <SafeAreaView style={styles.container}>
-  //   //   {/* StatusBar config */}
-  //   //   <StatusBar barStyle="dark-content" backgroundColor="#1e88e5" />
-  //     <ProductHome />
-  //   {/* </SafeAreaView> */}
-  // );
+  return (
+    <NavigationContainer>
+      <BottomTabNavigator />
+    </NavigationContainer>
+  );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//   },
+// });
 
 export default App;

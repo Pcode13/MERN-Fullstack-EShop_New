@@ -1,10 +1,11 @@
 import React, { FC } from 'react';
 import {
-  ScrollView,
+  FlatList,
   TouchableOpacity,
   StyleSheet,
   Text,
   View,
+  ListRenderItemInfo,
 } from 'react-native';
 
 interface Category {
@@ -25,60 +26,67 @@ const CategoryFilter: FC<Props> = ({
   setActiveIndex,
   onCategorySelect,
 }) => {
-  return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      style={styles.container}
-      contentContainerStyle={{ paddingHorizontal: 10 }}
+  const renderItem = ({ item, index }: ListRenderItemInfo<Category>) => (
+    <TouchableOpacity
+      style={[
+        styles.badge,
+        activeIndex === index ? styles.active : styles.inactive,
+      ]}
+      onPress={() => {
+        onCategorySelect(item._id);
+        setActiveIndex(index);
+      }}
     >
+      <Text style={styles.badgeText}>{item.name}</Text>
+    </TouchableOpacity>
+  );
+
+  return (
+    <View style={styles.container}>
       {/* All Category */}
-      <TouchableOpacity
-        style={[styles.badge, activeIndex === -1 ? styles.active : styles.inactive]}
+      {/* <TouchableOpacity
+        style={[
+          styles.badge,
+          activeIndex === -1 ? styles.active : styles.inactive,
+        ]}
         onPress={() => {
           onCategorySelect('all');
           setActiveIndex(-1);
         }}
       >
         <Text style={styles.badgeText}>All</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
-      {/* Dynamic Categories */}
-      {categories.map((item, index) => (
-        <TouchableOpacity
-          key={item._id}
-          style={[
-            styles.badge,
-            activeIndex === index ? styles.active : styles.inactive,
-          ]}
-          onPress={() => {
-            onCategorySelect(item._id);
-            setActiveIndex(index);
-          }}
-        >
-          <Text style={styles.badgeText}>{item.name}</Text>
-        </TouchableOpacity>
-      ))}
-    </ScrollView>
+      <FlatList
+        data={categories}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={item => item._id}
+        renderItem={renderItem}
+        contentContainerStyle={{ paddingHorizontal: 5 }}
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: 'row',
     backgroundColor: '#f2f2f2',
-    paddingVertical: 10,
+    padding: 10,
+    marginTop: 10,
   },
   badge: {
     paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingVertical: 10,
     borderRadius: 20,
     marginRight: 10,
   },
   active: {
-    backgroundColor: '#03bafc',
+    backgroundColor: '#000000',
   },
   inactive: {
-    backgroundColor: '#a0e1eb',
+    backgroundColor: 'rgba(7, 7, 7, 0.09)',
   },
   badgeText: {
     color: 'white',

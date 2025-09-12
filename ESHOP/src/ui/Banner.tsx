@@ -26,16 +26,16 @@ const Banner: FC = () => {
           <Swiper
             style={{ height: width / 2 }}
             index={0}
-            showPagination={true}
-            paginationStyle={{ bottom: 30 }}
-            dotStyle={{
-              backgroundColor: 'rgba(255, 255, 255, 0.5)',
-              width: 5,
-              height: 5,
-            }}
-            activeDotStyle={{ backgroundColor: '#fff', width: 10, height: 10 }}
-            paginationDefaultColor="rgba(0, 0, 0, 0.2)"
-            paginationActiveColor="#000"
+            // showPagination={true}
+            // paginationStyle={{ bottom: 30 }}
+            // dotStyle={{
+            //   backgroundColor: 'rgba(255, 255, 255, 0.5)',
+            //   width: 5,
+            //   height: 5,
+            // }}
+            // activeDotStyle={{ backgroundColor: '#fff', width: 10, height: 10 }}
+            // paginationDefaultColor="rgba(0, 0, 0, 0.2)"
+            // paginationActiveColor="#000"
             loop={true}
             autoplay={true}
             autoplayTimeout={2}
