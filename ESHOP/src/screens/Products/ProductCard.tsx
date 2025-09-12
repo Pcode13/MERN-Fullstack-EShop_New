@@ -1,5 +1,12 @@
 import React, { FC } from 'react';
-import { StyleSheet, View, Image, Text, TouchableOpacity, Dimensions } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Image,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 import { Product } from '../types/Product';
 
 const { width } = Dimensions.get('window');
