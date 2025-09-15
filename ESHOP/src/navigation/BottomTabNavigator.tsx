@@ -1,23 +1,23 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import ProductHome from '../screens/Products/ProductHome';
+
 import Profile from '../screens/User/Profile';
 import Cart from '../screens/Cart/CartContainer';
 import Admin from '../screens/Admin/AdminContainer';
 import Icon from '@react-native-vector-icons/ionicons';
+import HomeStackNavigator from './HomeStackNavigator';
+import { RootStackParamList } from './types/navgationType';
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<RootStackParamList>();
 
 const BottomTabNavigator = () => {
   return (
     <Tab.Navigator
-      initialRouteName="Home"
+      // initialRouteName="Home"
       screenOptions={{
         tabBarHideOnKeyboard: true,
         tabBarShowLabel: false,
         headerShown: false,
-        // tabBarStyle: { height: 60 },
-
         tabBarActiveTintColor: '#000',
         tabBarInactiveTintColor: '#0b070723',
         tabBarActiveBackgroundColor: '#e0e0e0',
@@ -26,7 +26,7 @@ const BottomTabNavigator = () => {
     >
       <Tab.Screen
         name="Home"
-        component={ProductHome}
+        component={HomeStackNavigator}
         options={{
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
@@ -36,7 +36,7 @@ const BottomTabNavigator = () => {
       />
       <Tab.Screen
         name="Cart"
-        component={Profile}
+        component={Cart}
         options={{
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
@@ -46,7 +46,7 @@ const BottomTabNavigator = () => {
       />
       <Tab.Screen
         name="Admin"
-        component={Profile}
+        component={Admin}
         options={{
           headerShown: false,
           tabBarIcon: ({ color, size }) => (

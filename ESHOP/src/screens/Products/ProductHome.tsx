@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 import { FlatList, Image, StyleSheet, View } from 'react-native';
+import { RouteProp, useRoute } from '@react-navigation/native';
 import ProductCard from './ProductCard';
 import { Product } from '../../types/shop';
 import ProductsData from '../../dummyJson/products.json';
@@ -10,12 +11,23 @@ import SearchedProductList from './SearchProduct';
 import { BANNER } from '../../assets/constant';
 import Banner from '../../ui/Banner';
 import CategoryFilter from './CategoryFilter';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+import { RootStackParamList } from '../../navigation/types/navgationType';
 
 const productsData = ProductsData as unknown as Product[];
 
 interface Props {}
 
+type HomeScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'SingleProduct'
+>;
+
 const ProductHome: FC = () => {
+  const navigation = useNavigation<HomeScreenNavigationProp>();
+
   const [products, setProducts] = useState<Product[]>([]);
   const [search, setSearch] = useState('');
   // const [productsFilters, setProductsFilters] = useState<Product[]>([]);
@@ -92,7 +104,9 @@ const ProductHome: FC = () => {
             renderItem={({ item }) => (
               <ProductCard
                 product={item}
-                onPress={p => console.log('Clicked:', p.name)}
+                onPress={() =>
+                  navigation.navigate('SingleProduct', { productId: item._id })
+                }
               />
             )}
             keyExtractor={(item, index) =>

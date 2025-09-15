@@ -1,16 +1,24 @@
-import React, { FC } from 'react';
-import { View, StyleSheet,Text } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 
-interface Props {}
-
-const CartContainer: FC<Props> = () => {
-  return <View style={styles.container}>
-            <Text> Hello Typescript CartContainer</Text>
-         </View>
+const CartContainer = () => {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>Cart Screen</Text>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
- container:{},
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
 });
 
 export default CartContainer;

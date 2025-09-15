@@ -1,10 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const AdminContainer = () => {
+const SingleProduct = ({ route }) => {
+  const { productId } = route.params;
+  console.log('Product ID:', productId);
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Admin Screen</Text>
+      <Text style={styles.text}>Single Product Screen</Text>
     </View>
   );
 };
@@ -21,4 +23,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AdminContainer;
+export default SingleProduct;
