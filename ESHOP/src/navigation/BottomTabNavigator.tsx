@@ -2,11 +2,11 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Profile from '../screens/User/Profile';
-import Cart from '../screens/Cart/CartContainer';
 import Admin from '../screens/Admin/AdminContainer';
 import Icon from '@react-native-vector-icons/ionicons';
 import HomeStackNavigator from './HomeStackNavigator';
 import { RootStackParamList } from './types/navgationType';
+import CartStackNavigator from './CartStackNavigator';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -36,7 +36,7 @@ const BottomTabNavigator = () => {
       />
       <Tab.Screen
         name="Cart"
-        component={Cart}
+        component={CartStackNavigator}
         options={{
           headerShown: false,
           tabBarIcon: ({ color, size }) => (

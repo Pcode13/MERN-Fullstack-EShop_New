@@ -1,28 +1,71 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Product } from '../types/shop';
+
+interface CartItem extends Product {
+  quantity: number;
+}
 
 interface CartState {
-  value: number;
+  items: CartItem[];
+  total: number;
+  totalItems: number;
 }
 
 const initialState: CartState = {
-  value: 10,
+  items: [],
+  total: 0,
+  totalItems: 0,
 };
 
-export const cartSlice = createSlice({
+const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    increment: state => {
-      state.value += 1;
+    addToCart: (state, action: PayloadAction<Product>) => {
+      const existingItem = state.items.find(item => item._id === action.payload._id);
+      console.log('addToCart', action.payload);
+      if (existingItem) {
+        existingItem.quantity +=  1;
+      } else {
+        state.items.push({ ...action.payload, quantity: 1 });
+      }
+      state.total = state.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      state.totalItems = state.items.reduce((sum, item) => sum + item.quantity, 0);
     },
-    decrement: state => {
-      state.value -= 1;
+    removeFromCart: (state, action: PayloadAction<string>) => {
+      state.items = state.items.filter(item => item._id !== action.payload);
+      state.total = state.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      state.totalItems = state.items.reduce((sum, item) => sum + item.quantity, 0);
     },
-    incrementByAmount: (state, action: PayloadAction<number>) => {
-      state.value += action.payload;
+    updateQuantity: (state, action: PayloadAction<{ _id: string; quantity: number }>) => {
+      const item = state.items.find(item => item._id === action.payload._id);
+      if (item) {
+        item.quantity = action.payload.quantity;
+      }
+      state.total = state.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      state.totalItems = state.items.reduce((sum, item) => sum + item.quantity, 0);
+    },
+    incrementQuantity: (state, action: PayloadAction<string>) => {
+       console.log('incrementQuantity State', state.items);
+      const item = state.items.find(item => item._id === action.payload);
+      console.log('incrementQuantity', action.payload);
+       console.log('incrementQuantity', item);
+      if (item) {
+        item.quantity += 1;
+      }
+      state.total = state.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      state.totalItems = state.items.reduce((sum, item) => sum + item.quantity, 0);
+    },
+    decrementQuantity: (state, action: PayloadAction<string>) => {
+      const item = state.items.find(item => item._id === action.payload);
+      if (item && item.quantity > 1) {
+        item.quantity -= 1;
+      }
+      state.total = state.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      state.totalItems = state.items.reduce((sum, item) => sum + item.quantity, 0);
     },
   },
 });
 
-export const { increment, decrement, incrementByAmount } = cartSlice.actions;
+export const { addToCart, removeFromCart, updateQuantity, incrementQuantity, decrementQuantity } = cartSlice.actions;
 export default cartSlice.reducer;

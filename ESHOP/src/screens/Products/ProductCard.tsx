@@ -8,20 +8,26 @@ import {
   Dimensions,
 } from 'react-native';
 import { Product } from '../types/Product';
+import CustomButton from '../../components/CustomButton';
 
 const { width } = Dimensions.get('window');
 
 interface ProductCardProps {
   product: Product;
-  onPress?: (product: Product) => void;
+  onPress?: () => void;
+  onAddToCart?: () => void;
 }
 
-const ProductCard: FC<ProductCardProps> = ({ product, onPress }) => {
+const ProductCard: FC<ProductCardProps> = ({
+  product,
+  onPress,
+  onAddToCart,
+}) => {
   return (
     <TouchableOpacity
       style={styles.card}
       activeOpacity={0.8}
-      onPress={() => onPress && onPress(product)}
+      onPress={onPress}
     >
       <Image
         source={{
@@ -35,6 +41,7 @@ const ProductCard: FC<ProductCardProps> = ({ product, onPress }) => {
         {product.name}
       </Text>
       <Text style={styles.price}>${product.price.toFixed(2)}</Text>
+      <CustomButton title="Add" onPress={onAddToCart} />
     </TouchableOpacity>
   );
 };
