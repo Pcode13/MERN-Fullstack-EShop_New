@@ -1,9 +1,6 @@
-import React, { FC, useEffect, useState } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import React, { FC, useState } from 'react';
+import { FlatList, StyleSheet, View, Text, ActivityIndicator } from 'react-native';
 import ProductCard from './ProductCard';
-import { Product } from '../../types/shop';
-import ProductsData from '../../dummyJson/products.json';
-import categories from '../../dummyJson/categories.json';
 import Header from '../../components/Header';
 import SearchBar from '../../components/SearchBar';
 import SearchedProductList from './SearchProduct';
@@ -14,8 +11,8 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/types/navgationType';
 import { useAppDispatch } from '../../hooks/reduxHooks';
 import { addToCart } from '../../redux/cartSlice';
-
-const productsData = ProductsData as unknown as Product[];
+import { useProducts } from '../../hooks/useProducts';
+import { useCategories } from '../../hooks/useCategories';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -25,22 +22,21 @@ type HomeScreenNavigationProp = NativeStackNavigationProp<
 const ProductHome: FC = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const dispatch = useAppDispatch();
+  const { products, loading, error, fetchProducts, fetchProductsByCategory } = useProducts();
+  const { categories } = useCategories();
 
-  const [products, setProducts] = useState<Product[]>([]);
   const [search, setSearch] = useState('');
-  // const [productsFilters, setProductsFilters] = useState<Product[]>([]);
   const [productsFiltered, setProductsFiltered] = useState<Product[]>([]);
   const [focus, setFocus] = useState<boolean>(false);
   const [activeIndex, setActiveIndex] = useState(-1);
 
   const handleCategorySelect = (categoryId: string | 'all') => {
-    console.log('Selected category:', categoryId);
-    // filter products here based on categoryId
+    if (categoryId === 'all') {
+      fetchProducts();
+    } else {
+      fetchProductsByCategory(categoryId);
+    }
   };
-
-  useEffect(() => {
-    setProducts(productsData as Product[]);
-  }, []);
 
   // Product Methods
   const searchProduct = (text: string) => {
@@ -60,6 +56,8 @@ const ProductHome: FC = () => {
   const onBlur = () => {
     setFocus(false);
   };
+
+
 
   return (
     <View style={styles.container}>
@@ -92,29 +90,37 @@ const ProductHome: FC = () => {
           /> */}
           <Banner />
           <CategoryFilter
-            categories={categories.map(cat => ({
-              _id: cat._id.$oid,
-              name: cat.name,
-            }))}
+            categories={[{ _id: 'all', name: 'All' }, ...categories]}
             activeIndex={activeIndex}
             setActiveIndex={setActiveIndex}
             onCategorySelect={handleCategorySelect}
           />
-          <FlatList
-            data={products}
-            renderItem={({ item }) => (
-              <ProductCard
-                product={item}
-                onPress={() => navigation.navigate('SingleProduct')}
-                onAddToCart={() => dispatch(addToCart(item))}
-              />
-            )}
-            keyExtractor={(item, index) =>
-              item._id?.toString() || index.toString()
-            }
-            numColumns={2}
-            contentContainerStyle={styles.list}
-          />
+          {loading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#000" />
+              <Text>Loading products...</Text>
+            </View>
+          ) : error ? (
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>{error}</Text>
+            </View>
+          ) : (
+            <FlatList
+              data={products}
+              renderItem={({ item }) => (
+                <ProductCard
+                  product={item}
+                  onPress={() => navigation.navigate('SingleProduct', { productId: item._id })}
+                  onAddToCart={() => dispatch(addToCart(item))}
+                />
+              )}
+              keyExtractor={(item, index) =>
+                item._id?.toString() || index.toString()
+              }
+              numColumns={2}
+              contentContainerStyle={styles.list}
+            />
+          )}
         </>
       )}
     </View>
@@ -132,6 +138,22 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: 200,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 16,
+    textAlign: 'center',
   },
 });
 

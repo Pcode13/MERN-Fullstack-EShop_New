@@ -36,6 +36,7 @@ const CartContainer = () => {
   const dispatch = useDispatch();
 
   const handleIncrement = (id: string) => {
+    console.log('handleIncrement ID', id);
     dispatch(incrementQuantity(id));
   };
 

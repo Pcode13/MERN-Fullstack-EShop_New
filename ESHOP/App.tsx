@@ -10,6 +10,7 @@ interface Props {}
 const App: FC<Props> = () => {
   console.log('Store State:', store.getState());
   console.log('Store State:', store);
+  
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Provider store={store}>
