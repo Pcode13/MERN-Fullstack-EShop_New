@@ -9,4 +9,6 @@ export type RootStackParamList = {
   Confirmation: { shippingAddress: any; paymentInfo: any };
   Admin: undefined;
   user: undefined;
+  Login: undefined;
+  Register: undefined;
 };

@@ -1,6 +1,6 @@
 // src/screens/Auth/Login.tsx
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import CustomTextInput from '../../components/CustomTextInput';
 import CustomButton from '../../components/CustomButton';
 
@@ -14,6 +14,12 @@ const Login = () => {
   };
 
   return (
+ 
+<KeyboardAvoidingView
+  behavior={Platform.OS === "ios" ? "padding" : "height"}
+  style={{ flex: 1 }}
+>
+  <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}>
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
       <CustomTextInput
@@ -33,7 +39,11 @@ const Login = () => {
       <CustomButton title="Register" onPress={onLogin} style={{ margin: 16 }} />
       <CustomButton title="Login" onPress={onLogin} style={{ margin: 16 }} />
     </View>
-  );
+  
+  </ScrollView>
+</KeyboardAvoidingView>
+  )
+   
 };
 
 const styles = StyleSheet.create({

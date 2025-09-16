@@ -9,4 +9,5 @@ export const endPoints = {
   cartURL: endpoints.cart,
   loginURL: endpoints.login,
   registerURL: endpoints.register,
+  
 };

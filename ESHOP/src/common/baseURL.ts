@@ -23,8 +23,8 @@ export const endpoints = {
   
   // Users
   users: `${baseURL}/users`,
-  login: `${baseURL}/auth/login`,
-  register: `${baseURL}/auth/register`,
+  login: `${baseURL}/users/login`,
+  register: `${baseURL}/users/register`,
   
   // Orders
   orders: `${baseURL}/orders`,
