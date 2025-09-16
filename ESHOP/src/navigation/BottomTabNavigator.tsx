@@ -1,12 +1,12 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import Profile from '../screens/User/Profile';
 import Admin from '../screens/Admin/AdminContainer';
 import Icon from '@react-native-vector-icons/ionicons';
 import HomeStackNavigator from './HomeStackNavigator';
 import { RootStackParamList } from './types/navgationType';
 import CartStackNavigator from './CartStackNavigator';
+import UserNavigator from './UserNavigation';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -56,7 +56,7 @@ const BottomTabNavigator = () => {
       />
       <Tab.Screen
         name="user"
-        component={Profile}
+        component={UserNavigator}
         options={{
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
