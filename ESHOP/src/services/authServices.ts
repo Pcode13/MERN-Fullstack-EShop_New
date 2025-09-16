@@ -55,9 +55,11 @@ export const loginUser = async (loginData: LoginData): Promise<ApiResponse<AuthR
 // Register
 export const registerUser = async (registerData: RegisterData): Promise<ApiResponse<AuthResponse | null>> => {
   try {
+    console.log('Register Data:', registerData);
+    console.log('Register URL:', endpoints.register);
     const response = await axiosPost<AuthResponse>(endpoints.register, registerData);
     
-    if (response && response.status === 201) {
+    if (response && (response.status === 201 || response.status === 200)) {
       return {
         data: response.data,
         status: response.status,
@@ -65,12 +67,13 @@ export const registerUser = async (registerData: RegisterData): Promise<ApiRespo
     }
     
     throw new Error('Registration failed');
-  } catch (error) {
-    console.error('Error registering:', error);
+  } catch (error: any) {
+    console.error('Registration Error:', error);
+    const errorMessage = error?.response?.data?.message || error?.data?.message || 'Registration failed';
     return {
       data: null,
-      status: 400,
-      message: 'Registration failed',
+      status: error?.response?.status || error?.status || 400,
+      message: errorMessage,
     };
   }
 };

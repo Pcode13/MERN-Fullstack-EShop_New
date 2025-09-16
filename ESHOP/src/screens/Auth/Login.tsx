@@ -10,11 +10,14 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { loginUser } from '../../services/authServices';
+import { useAppDispatch } from '../../hooks/reduxHooks';
+import { loginSuccess } from '../../redux/authSlice';
 import Page from '../../ui/Page';
 import Header from '../../components/Header';
 
 const Login = () => {
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -32,6 +35,10 @@ const Login = () => {
       const response = await loginUser(formData);
       
       if (response.status === 200 && response.data) {
+        dispatch(loginSuccess({
+          user: response.data.user,
+          token: response.data.token
+        }));
         Alert.alert('Success', 'Login successful!');
         navigation.navigate('Home');
       } else {

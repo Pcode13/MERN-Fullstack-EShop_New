@@ -1,78 +1,161 @@
-// src/screens/Auth/Register.tsx
 import React, { useState } from 'react';
 import {
   View,
   Text,
-  Button,
   StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
   ScrollView,
-  KeyboardAvoidingView,
-  Platform,
 } from 'react-native';
-import CustomTextInput from '../../components/CustomTextInput';
-import CustomButton from '../../components/CustomButton';
+import { useNavigation } from '@react-navigation/native';
+import { registerUser } from '../../services/authServices';
+import Page from '../../ui/Page';
+import Header from '../../components/Header';
 
 const Register = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const navigation = useNavigation();
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    phone: '',
+  });
+  const [loading, setLoading] = useState(false);
 
-  const onRegister = () => {
-    console.log('Registering with:', { name, email, password });
-    // TODO: call API
+  const handleRegister = async () => {
+    if (!formData.name || !formData.email || !formData.password) {
+      Alert.alert('Error', 'Please fill required fields');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await registerUser(formData);
+      console.log('register', response);
+      if (response.status === 200 && response.data) {
+        Alert.alert('Success', 'Registration successful!', [
+          {
+            text: 'OK',
+            onPress: () => navigation.navigate('Login'),
+          },
+        ]);
+      } else {
+        Alert.alert('Error', response.message || 'Registration failed');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Network error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1 }}
-    >
-      <ScrollView
-        contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
-      >
-        <View style={styles.container}>
-          <Text style={styles.title}>Register</Text>
-          <CustomTextInput
-            label="Name"
-            placeholder="Enter your full name"
-            value={name}
-            onChangeText={setName}
-          />
-          <CustomTextInput
-            label="Email"
-            placeholder="Enter your email"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-          />
-          <CustomTextInput
-            label="Password"
-            placeholder="Enter your password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-          />
-          {/* <Button title="Register" onPress={onRegister} /> */}
+    <Page>
+      <Header title="Register" />
+      <ScrollView style={styles.container}>
+        <Text style={styles.title}>Create Account</Text>
 
-          <CustomButton title="Register" onPress={onRegister} />
-          <CustomButton title="Login" onPress={onRegister} />
-        </View>
+        <TextInput
+          style={styles.input}
+          placeholder="Full Name *"
+          value={formData.name}
+          onChangeText={text => setFormData({ ...formData, name: text })}
+        />
+
+        <TextInput
+          style={styles.input}
+          placeholder="Email *"
+          value={formData.email}
+          onChangeText={text => setFormData({ ...formData, email: text })}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+
+        <TextInput
+          style={styles.input}
+          placeholder="Phone (Optional)"
+          value={formData.phone}
+          onChangeText={text => setFormData({ ...formData, phone: text })}
+          keyboardType="phone-pad"
+        />
+
+        <TextInput
+          style={styles.input}
+          placeholder="Password *"
+          value={formData.password}
+          onChangeText={text => setFormData({ ...formData, password: text })}
+          secureTextEntry
+        />
+
+        <TouchableOpacity
+          style={[styles.button, loading && styles.disabledButton]}
+          onPress={handleRegister}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.buttonText}>Register</Text>
+          )}
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.linkButton}
+          onPress={() => navigation.navigate('Login')}
+        >
+          <Text style={styles.linkText}>Already have an account? Login</Text>
+        </TouchableOpacity>
       </ScrollView>
-    </KeyboardAvoidingView>
+    </Page>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     padding: 20,
   },
   title: {
-    fontSize: 24,
-    marginBottom: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
+    marginBottom: 40,
+    marginTop: 40,
+    color: '#333',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    padding: 15,
+    marginBottom: 15,
+    borderRadius: 8,
+    backgroundColor: '#fff',
+    fontSize: 16,
+  },
+  button: {
+    backgroundColor: '#000',
+    padding: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  disabledButton: {
+    backgroundColor: '#ccc',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  linkButton: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  linkText: {
+    color: '#007AFF',
+    fontSize: 16,
   },
 });
 
